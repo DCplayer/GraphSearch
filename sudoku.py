@@ -8,6 +8,9 @@ class sudoku:
             probability: dictionary which will hold the probable numbers of 2 or more squares 
                 in the case that there is not only one solution to the problem
             record: list of  steps that the sudoku took to be solved. 
+            columns: list that holds the 4 columns with their actual values
+            rows: list that holds the 4 rows with their actual values
+            squares: list that holds the 4 squares with their actual values
         """""
         self.sudoku_string = list(sudoku_string)
         self.change = False
@@ -58,34 +61,8 @@ class sudoku:
 
     def contradiction(self):
         resolve = False
-        #Columns & Rows
-        for i in range(4):
-            row = [self.sudoku_string[4*i + 0], self.sudoku_string[4*i + 1], self.sudoku_string[4*i + 2],
-                   self.sudoku_string[4*i + 3]]
-            column = [self.sudoku_string[i], self.sudoku_string[i + 4], self.sudoku_string[i + 8],
-                      self.sudoku_string[i + 12]]
 
-            self.rows.append(row)
-            self.columns.append(column)
-
-        #Squares
-        sector1 = []
-        sector2 = []
-        sector3 = []
-        sector4 = []
-        for i in range(16):
-            sector = self.sectors[i]
-            if sector == 1:
-                sector1.append(self.sudoku_string[i])
-            elif sector == 2:
-                sector2.append(self.sudoku_string[i])
-            elif sector == 3:
-                sector3.append(self.sudoku_string[i])
-            elif sector == 4:
-                sector4.append(self.sudoku_string[i])
-            else:
-                print("Something went wrong: Not identifying secotr correctly")
-        self.squares.append(sector1, sector2, sector3, sector4)
+        self.update_data(self.sudoku_string)
 
         for row in self.rows:
             for x in row:
@@ -108,6 +85,38 @@ class sudoku:
                         break
 
         return resolve
+
+
+    def update_data(self, string_state):
+        # Columns & Rows
+        for i in range(4):
+            row = [string_state[4 * i + 0], string_state[4 * i + 1], string_state[4 * i + 2],
+                   string_state[4 * i + 3]]
+            column = [string_state[i], string_state[i + 4], string_state[i + 8],
+                      string_state[i + 12]]
+
+            self.rows.append(row)
+            self.columns.append(column)
+
+        # Squares
+        sector1 = []
+        sector2 = []
+        sector3 = []
+        sector4 = []
+        for i in range(16):
+            sector = self.sectors[i]
+            if sector == 1:
+                sector1.append(string_state[i])
+            elif sector == 2:
+                sector2.append(string_state[i])
+            elif sector == 3:
+                sector3.append(string_state[i])
+            elif sector == 4:
+                sector4.append(string_state[i])
+            else:
+                print("Something went wrong: Not identifying secotr correctly")
+        self.squares.append(sector1, sector2, sector3, sector4)
+
 
     def result(self):
         return
