@@ -2,6 +2,7 @@
 class sudoku:
     def __init__(self, sudoku_string):
         """ Where
+            initial_string: the one to compare at the end. You'll understand later. 
             sudoku_string: Is the parameter initializer of the 4x4 sudoku
             change: a boolean that will determine if, after an iteration, the sudoku changed
             solvable: a boolean that will determine if the sudoku is solvable
@@ -11,7 +12,10 @@ class sudoku:
             columns: list that holds the 4 columns with their actual values
             rows: list that holds the 4 rows with their actual values
             squares: list that holds the 4 squares with their actual values
+            queue_list: list that holds the queue of the states reading right now
+            
         """""
+        self.initial_string = sudoku_string
         self.sudoku_string = list(sudoku_string)
         self.change = False
         self.solvable = True
@@ -38,6 +42,13 @@ class sudoku:
         self.columns = []
         self.rows = []
         self.squares = []
+        self.queue_list = []
+        self.backtrack = {
+            self.initial_string: ''
+        }
+
+        for i in range(16):
+            self.probability[i] = [1, 2, 3, 4]
 
     def actions(self):
         self.record.append(self.sudoku_string)
@@ -86,7 +97,6 @@ class sudoku:
 
         return resolve
 
-
     def update_data(self, string_state):
         # Columns & Rows
         for i in range(4):
@@ -117,7 +127,37 @@ class sudoku:
                 print("Something went wrong: Not identifying secotr correctly")
         self.squares.append(sector1, sector2, sector3, sector4)
 
-
     def result(self):
+
+
         return
 
+    def solve(self, index):
+        self.update_data(self, ''.join(self.sudoku_string))
+        data = self.sudoku_string
+        if data != '.':
+            return False
+        square = self.which_square(index)
+
+
+        return
+
+    '''''Returns in which square form self.square[] should you look for the numbers'''
+    def which_square(self, index):
+        number = self.sectors[index]
+        sector1 = [self.sudoku_string[0], self.sudoku_string[1], self.sudoku_string[4], self.sudoku_string[5]]
+        sector2 = [self.sudoku_string[2], self.sudoku_string[3], self.sudoku_string[6], self.sudoku_string[7]]
+        sector3 = [self.sudoku_string[8], self.sudoku_string[9], self.sudoku_string[12], self.sudoku_string[13]]
+        sector4 = [self.sudoku_string[10], self.sudoku_string[11], self.sudoku_string[14], self.sudoku_string[15]]
+
+        if number == 1:
+            return sector1
+        elif number == 2:
+            return sector2
+        elif number == 3:
+            return sector3
+        elif number == 4:
+            return sector4
+        else:
+            print("Something went terrible with which_square")
+        return
