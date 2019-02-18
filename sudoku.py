@@ -127,19 +127,31 @@ class sudoku:
                 print("Something went wrong: Not identifying secotr correctly")
         self.squares.append(sector1, sector2, sector3, sector4)
 
-    def result(self):
-
-
-        return
+        for i in range(16):
+            self.probability[i] = [1, 2, 3, 4]
 
     def solve(self, index):
-        self.update_data(self, ''.join(self.sudoku_string))
-        data = self.sudoku_string
+        data = self.sudoku_string[index]
+
         if data != '.':
             return False
+
+        content = self.probability[index]
         square = self.which_square(index)
+        row = self.which_row(index)
+        col = self.which_col(index)
 
-
+        for i in range(4):
+            n1 = square[i]
+            if n1 in content:
+                content.remove(n1)
+            n2 = row[i]
+            if n2 in content:
+                content.remove(n2)
+            n3 = col[i]
+            if n3 in content:
+                content.remove(n3)
+        self.probability[index] = content
         return
 
     '''''Returns in which square form self.square[] should you look for the numbers'''
@@ -160,4 +172,32 @@ class sudoku:
             return sector4
         else:
             print("Something went terrible with which_square")
+        return
+
+    '''''Returns in which row form self.square[] should you look for the numbers'''
+    def which_row(self, index):
+        if index < 4:
+            return [self.sudoku_string[0], self.sudoku_string[1], self.sudoku_string[2], self.sudoku_string[3]]
+        elif 4 <= index < 8:
+            return [self.sudoku_string[4], self.sudoku_string[5], self.sudoku_string[6], self.sudoku_string[7]]
+        elif 4 <= index < 8:
+            return [self.sudoku_string[8], self.sudoku_string[9], self.sudoku_string[10], self.sudoku_string[11]]
+        elif 4 <= index < 8:
+            return [self.sudoku_string[12], self.sudoku_string[13], self.sudoku_string[14], self.sudoku_string[15]]
+        else:
+            print("Something went wrong in which_row()")
+        return
+
+    '''''Returns in which column form self.square[] should you look for the numbers'''
+    def which_col(self, index):
+        if index < 4:
+            return [self.sudoku_string[0], self.sudoku_string[4], self.sudoku_string[8], self.sudoku_string[12]]
+        elif 4 <= index < 8:
+            return [self.sudoku_string[1], self.sudoku_string[5], self.sudoku_string[9], self.sudoku_string[13]]
+        elif 4 <= index < 8:
+            return [self.sudoku_string[2], self.sudoku_string[6], self.sudoku_string[10], self.sudoku_string[14]]
+        elif 4 <= index < 8:
+            return [self.sudoku_string[10], self.sudoku_string[11], self.sudoku_string[14], self.sudoku_string[15]]
+        else:
+            print("Something went wrong in which_row()")
         return
