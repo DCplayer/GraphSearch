@@ -1,5 +1,7 @@
 from copy import deepcopy
-class sudoku:
+
+
+class Sudoku:
     def __init__(self, sudoku_string):
         """ Where
             initial_string: the one to compare at the end. You'll understand later. 
@@ -21,27 +23,27 @@ class sudoku:
         self.initial_string = sudoku_string
         self.actual_string = sudoku_string
         self.sudoku_string = list(sudoku_string)
-        self.change = False
+        self.change = True
         self.solvable = True
         self.finish = False
         self.probability = {}
         self.sectors = {
-            "0": 0,
-            "1": 0,
-            "2": 1,
-            "3": 1,
-            "4": 0,
-            "5": 0,
-            "6": 1,
-            "7": 1,
-            "8": 2,
-            "9": 2,
-            "10": 3,
-            "11": 3,
-            "12": 2,
-            "13": 2,
-            "14": 3,
-            "15": 3
+            0: 0,
+            1: 0,
+            2: 1,
+            3: 1,
+            4: 0,
+            5: 0,
+            6: 1,
+            7: 1,
+            8: 2,
+            9: 2,
+            10: 3,
+            11: 3,
+            12: 2,
+            13: 2,
+            14: 3,
+            15: 3
         }
         self.record = []
         self.columns = []
@@ -70,6 +72,7 @@ class sudoku:
             return
 
         while not self.finish and self.change:
+            print(self.queue_list)
             compare1 = deepcopy(self.queue_list)
             self.iterate_reaction()
 
@@ -218,17 +221,20 @@ class sudoku:
         sector4 = []
         for i in range(16):
             sector = self.sectors[i]
-            if sector == 1:
+            if sector == 0:
                 sector1.append(string_state[i])
-            elif sector == 2:
+            elif sector == 1:
                 sector2.append(string_state[i])
-            elif sector == 3:
+            elif sector == 2:
                 sector3.append(string_state[i])
-            elif sector == 4:
+            elif sector == 3:
                 sector4.append(string_state[i])
             else:
                 print("Something went wrong: Not identifying secotr correctly")
-        self.squares.append(sector1, sector2, sector3, sector4)
+        self.squares.append(sector1)
+        self.squares.append(sector2)
+        self.squares.append(sector3)
+        self.squares.append(sector4)
 
         for i in range(16):
             self.probability[i] = [1, 2, 3, 4]
@@ -241,13 +247,13 @@ class sudoku:
         sector3 = [self.sudoku_string[8], self.sudoku_string[9], self.sudoku_string[12], self.sudoku_string[13]]
         sector4 = [self.sudoku_string[10], self.sudoku_string[11], self.sudoku_string[14], self.sudoku_string[15]]
 
-        if number == 1:
+        if number == 0:
             return sector1
-        elif number == 2:
+        elif number == 1:
             return sector2
-        elif number == 3:
+        elif number == 2:
             return sector3
-        elif number == 4:
+        elif number == 3:
             return sector4
         else:
             print("Something went terrible with which_square")
@@ -259,9 +265,9 @@ class sudoku:
             return [self.sudoku_string[0], self.sudoku_string[1], self.sudoku_string[2], self.sudoku_string[3]]
         elif 4 <= index < 8:
             return [self.sudoku_string[4], self.sudoku_string[5], self.sudoku_string[6], self.sudoku_string[7]]
-        elif 4 <= index < 8:
+        elif 8 <= index < 12:
             return [self.sudoku_string[8], self.sudoku_string[9], self.sudoku_string[10], self.sudoku_string[11]]
-        elif 4 <= index < 8:
+        elif 12 <= index < 16:
             return [self.sudoku_string[12], self.sudoku_string[13], self.sudoku_string[14], self.sudoku_string[15]]
         else:
             print("Something went wrong in which_row()")
@@ -273,9 +279,9 @@ class sudoku:
             return [self.sudoku_string[0], self.sudoku_string[4], self.sudoku_string[8], self.sudoku_string[12]]
         elif 4 <= index < 8:
             return [self.sudoku_string[1], self.sudoku_string[5], self.sudoku_string[9], self.sudoku_string[13]]
-        elif 4 <= index < 8:
+        elif 8 <= index < 12:
             return [self.sudoku_string[2], self.sudoku_string[6], self.sudoku_string[10], self.sudoku_string[14]]
-        elif 4 <= index < 8:
+        elif 12 <= index < 16:
             return [self.sudoku_string[10], self.sudoku_string[11], self.sudoku_string[14], self.sudoku_string[15]]
         else:
             print("Something went wrong in which_row()")
@@ -307,3 +313,7 @@ class sudoku:
             if length == len(self.state_cost):
                 self.state_cost.append(state_worth)
                 self.queue_list.append(string_queuer)
+
+
+sudoku = Sudoku("3..1.1....4.4..2")
+sudoku.actions()
