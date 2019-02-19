@@ -138,7 +138,7 @@ class Sudoku:
 
                     self.backtrack[string_result] = self.actual_string
                     self.append_queuer(string_result, state_worth)
-                    return
+
 
         else:
             for x in self.queue_list:
@@ -341,7 +341,7 @@ class Sudoku:
             for x in self.state_cost:
                 if state_worth > x:
                     self.state_cost.insert(index, state_worth)
-                    self.queue_list.index(index, string_queuer)
+                    self.queue_list.insert(index, string_queuer)
 
                 index+=1
 
