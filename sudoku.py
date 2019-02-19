@@ -131,12 +131,12 @@ class Sudoku:
                     state_worth = number - 1
 
                     copy = self.sudoku_string
-                    copy[x] = self.probability[x][0]
+                    copy[x] = str(self.probability[x][0])
 
-                    state_worth += 16 - copy.count('.')
                     string_result = '.'.join(copy)
-                    self.backtrack[string_result] = self.actual_string
+                    state_worth += 16 - copy.count('.') + self.expert_solve(string_result) - (number - 1)
 
+                    self.backtrack[string_result] = self.actual_string
                     self.append_queuer(string_result, state_worth)
                     return
 
@@ -149,19 +149,19 @@ class Sudoku:
                 for i in range(16):
                     self.solve(i)
 
-                number = self.count_prob100()
+                number = self.count_prob100() - 1
                 for x in self.probability:
                     if len(self.probability[x]) < 1:
                         print("Something went terrible wrong with iterate_reaction: Size of the probability array is 0")
 
                     elif len(self.probability[x]) == 1:
-                        state_worth = number - 1
+
 
                         copy = self.sudoku_string
                         copy[x] = self.probability[x][0]
 
-                        state_worth += 16 - copy.count('.')
                         string_result = '.'.join(copy)
+                        state_worth = 16 - copy.count('.') + self.expert_solve(string_result) - number
 
 
                         #Simplemente revisar si existe una manera mas rapida de llegar al string creado ahorita, en dado
@@ -192,16 +192,50 @@ class Sudoku:
 
         for i in range(4):
             n1 = square[i]
-            if n1 in content:
-                content.remove(n1)
+            if n1 != '.':
+                if int(n1) in content:
+                    content.remove(int(n1))
             n2 = row[i]
-            if n2 in content:
-                content.remove(n2)
+            if n2 != '.':
+                if int(n2) in content:
+                    content.remove(int(n2))
             n3 = col[i]
-            if n3 in content:
-                content.remove(n3)
+            if n3 != '.':
+                if int(n3) in content:
+                    content.remove(int(n3))
         self.probability[index] = content
         return
+
+    def expert_solve(self, data):
+        dato = list(data)
+        prob = deepcopy(self.probability)
+
+        number = 0
+        for x in dato:
+            if x == '.':
+                content = prob[number]
+                square = self.which_square(number)
+                row = self.which_row(number)
+                col = self.which_col(number)
+
+                for i in range(4):
+                    n1 = square[i]
+                    if n1 in content:
+                        content.remove(n1)
+                    n2 = row[i]
+                    if n2 in content:
+                        content.remove(n2)
+                    n3 = col[i]
+                    if n3 in content:
+                        content.remove(n3)
+                prob[number] = content
+            number =+ 1
+
+        number = 0
+        for x in prob:
+            if len(prob[x]) == 1:
+                number+=1
+        return number
 
     def update_data(self, string_state):
         # Columns & Rows
@@ -275,14 +309,15 @@ class Sudoku:
 
     '''''Returns in which column form self.square[] should you look for the numbers'''
     def which_col(self, index):
-        if index < 4:
+        module = index % 4
+        if module == 0:
             return [self.sudoku_string[0], self.sudoku_string[4], self.sudoku_string[8], self.sudoku_string[12]]
-        elif 4 <= index < 8:
+        elif module == 1:
             return [self.sudoku_string[1], self.sudoku_string[5], self.sudoku_string[9], self.sudoku_string[13]]
-        elif 8 <= index < 12:
+        elif module == 2:
             return [self.sudoku_string[2], self.sudoku_string[6], self.sudoku_string[10], self.sudoku_string[14]]
-        elif 12 <= index < 16:
-            return [self.sudoku_string[10], self.sudoku_string[11], self.sudoku_string[14], self.sudoku_string[15]]
+        elif module == 3:
+            return [self.sudoku_string[3], self.sudoku_string[7], self.sudoku_string[11], self.sudoku_string[15]]
         else:
             print("Something went wrong in which_row()")
         return
