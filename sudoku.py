@@ -1,11 +1,13 @@
-
+from copy import deepcopy
 class sudoku:
     def __init__(self, sudoku_string):
         """ Where
             initial_string: the one to compare at the end. You'll understand later. 
+            actual_string: String being compared and analyzed
             sudoku_string: Is the parameter initializer of the 4x4 sudoku
             change: a boolean that will determine if, after an iteration, the sudoku changed
             solvable: a boolean that will determine if the sudoku is solvable
+            finish: will determine that we have found a solution for the sudoku
             probability: dictionary which will hold the probable numbers of 2 or more squares 
                 in the case that there is not only one solution to the problem
             record: list of  steps that the sudoku took to be solved. 
@@ -13,12 +15,15 @@ class sudoku:
             rows: list that holds the 4 rows with their actual values
             squares: list that holds the 4 squares with their actual values
             queue_list: list that holds the queue of the states reading right now
-            
+            state_cost: list that holds the cost of every step mentioned on queue_list to organize them
+            frontiers: list that hold the string already read
         """""
         self.initial_string = sudoku_string
+        self.actual_string = sudoku_string
         self.sudoku_string = list(sudoku_string)
         self.change = False
         self.solvable = True
+        self.finish = False
         self.probability = {}
         self.sectors = {
             "0": 0,
@@ -43,9 +48,11 @@ class sudoku:
         self.rows = []
         self.squares = []
         self.queue_list = []
+        self.state_cost = []
         self.backtrack = {
             self.initial_string: ''
         }
+        self.frontiers = []
 
         for i in range(16):
             self.probability[i] = [1, 2, 3, 4]
@@ -62,7 +69,13 @@ class sudoku:
             print("Not solvable sudoku. There is a contradiction on the sudoku itself.")
             return
 
-        #aqui tiene que ir la calculada del rompecabezas, antes de ver si es solvable o no
+        while not self.finish and self.change:
+            compare1 = deepcopy(self.queue_list)
+            self.iterate_reaction()
+
+            if compare1 == self.queue_list:
+                self.change == False
+                self.solvable = False
 
         if not self.solvable:
             print("Not solvable sudoku. There are more than one answer to it \n")
@@ -97,6 +110,96 @@ class sudoku:
 
         return resolve
 
+    def iterate_reaction(self):
+        # meter el primer strign en donde estara la lista de records
+        if len(self.queue_list) < 1:
+            self.frontiers.append(self.actual_string)
+            self.update_data(self.actual_string)
+
+            for i in range(16):
+                self.solve(i)
+
+            number = self.count_prob100()
+            for x in self.probability:
+                if len(self.probability[x]) < 1:
+                    print("Something went terrible wrong with iterate_reaction: Size of the probability array is 0")
+
+                elif len(self.probability[x]) == 1:
+                    state_worth = number - 1
+
+                    copy = self.sudoku_string
+                    copy[x] = self.probability[x][0]
+
+                    state_worth += 16 - copy.count('.')
+                    string_result = '.'.join(copy)
+                    self.backtrack[string_result] = self.actual_string
+
+                    self.append_queuer(string_result, state_worth)
+                    return
+
+        else:
+            for x in self.queue_list:
+                self.actual_string = x
+                self.frontiers.append(self.actual_string)
+                self.update_data(self.actual_string)
+
+                for i in range(16):
+                    self.solve(i)
+
+                number = self.count_prob100()
+                for x in self.probability:
+                    if len(self.probability[x]) < 1:
+                        print("Something went terrible wrong with iterate_reaction: Size of the probability array is 0")
+
+                    elif len(self.probability[x]) == 1:
+                        state_worth = number - 1
+
+                        copy = self.sudoku_string
+                        copy[x] = self.probability[x][0]
+
+                        state_worth += 16 - copy.count('.')
+                        string_result = '.'.join(copy)
+
+
+                        #Simplemente revisar si existe una manera mas rapida de llegar al string creado ahorita, en dado
+                        #caso existiera en queue_list
+
+                        if string_result in self.queue_list:
+                            index_queue = self.queue_list.index(string_result)
+                            if state_worth < self.state_cost[index_queue]:
+                                self.backtrack[string_result] = self.actual_string
+                                self.append_queuer(string_result, state_worth)
+                                return
+                        return
+                # solver para cada uno y que se coloquen los nuevos strings en el backtrack
+
+            # Ademas debes de meter en las fronteras cada vez que se itera.
+        return
+
+    def solve(self, index):
+        data = self.sudoku_string[index]
+
+        if data != '.':
+            return False
+
+        content = self.probability[index]
+        square = self.which_square(index)
+        row = self.which_row(index)
+        col = self.which_col(index)
+
+        for i in range(4):
+            n1 = square[i]
+            if n1 in content:
+                content.remove(n1)
+            n2 = row[i]
+            if n2 in content:
+                content.remove(n2)
+            n3 = col[i]
+            if n3 in content:
+                content.remove(n3)
+        self.probability[index] = content
+        return
+
     def update_data(self, string_state):
         # Columns & Rows
         for i in range(4):
@@ -129,30 +232,6 @@ class sudoku:
 
         for i in range(16):
             self.probability[i] = [1, 2, 3, 4]
-
-    def solve(self, index):
-        data = self.sudoku_string[index]
-
-        if data != '.':
-            return False
-
-        content = self.probability[index]
-        square = self.which_square(index)
-        row = self.which_row(index)
-        col = self.which_col(index)
-
-        for i in range(4):
-            n1 = square[i]
-            if n1 in content:
-                content.remove(n1)
-            n2 = row[i]
-            if n2 in content:
-                content.remove(n2)
-            n3 = col[i]
-            if n3 in content:
-                content.remove(n3)
-        self.probability[index] = content
-        return
 
     '''''Returns in which square form self.square[] should you look for the numbers'''
     def which_square(self, index):
@@ -201,3 +280,30 @@ class sudoku:
         else:
             print("Something went wrong in which_row()")
         return
+
+    def count_prob100(self):
+        number = 0
+        for x in self.probability:
+            if len(self.probability[x]) == 1:
+                number+=1
+
+        return number
+
+    def append_queuer(self, string_queuer, state_worth):
+        if len(self.queue_list) < 1 and len(self.state_cost) < 1 :
+            self.queue_list.append(string_queuer)
+            self.state_cost.append(state_worth)
+
+        else:
+            length = len(self.state_cost)
+            index = 0
+            for x in self.state_cost:
+                if state_worth > x:
+                    self.state_cost.insert(index, state_worth)
+                    self.queue_list.index(index, string_queuer)
+
+                index+=1
+
+            if length == len(self.state_cost):
+                self.state_cost.append(state_worth)
+                self.queue_list.append(string_queuer)
