@@ -60,9 +60,8 @@ class Sudoku:
             self.probability[i] = [1, 2, 3, 4]
 
     def actions(self):
-        self.record.append(self.sudoku_string)
-
-        if self.record.count('.') > 12:
+        print(self.sudoku_string.count('.'))
+        if self.sudoku_string.count('.') > 12:
             print("Not solvable sudoku. There are less than 4 clues in a 4 x 4 sudoku. \n")
             print("Check: http://pi.math.cornell.edu/~mec/Summer2009/Mahmood/More.html for explanation")
             return
