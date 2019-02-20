@@ -72,26 +72,22 @@ class Sudoku:
             return
 
         while not self.finish and self.change:
-            print("--------------------------------------------------------------------")
-            print(self.queue_list)
+
             compare1 = deepcopy(self.queue_list)
             self.iterate_reaction()
-
-            print("\n\nBefore Compare: ")
-            print(self.queue_list)
-            print(compare1)
-            print(self.actual_string)
-            print("\n\n")
             if compare1 == self.queue_list:
                 self.change == False
                 self.solvable = False
-            print("--------------------------------------------------------------------")
-
+        print("--------------------------------------------------------------------")
         if not self.solvable:
             print("Not solvable sudoku. There are more than one answer to it \n")
             print(self.sudoku_string)
             print(self.probability)
+            print("--------------------------------------------------------------------")
             return
+        print("Fastest stepts to solution: \n")
+        print(self.record)
+        print("--------------------------------------------------------------------")
 
     def contradiction(self):
         resolve = False
@@ -151,6 +147,7 @@ class Sudoku:
             for x in self.queue_list:
                 if list(x).count('.') == 0:
                     self.finish = True
+                    self.backtrack_record(x)
 
 
                 self.actual_string = x
@@ -247,7 +244,6 @@ class Sudoku:
             number = number + 1
 
         number = 0
-        print("Probabilidad de " + str(data) + "\n" + str(prob))
         for x in prob:
             if len(prob[x]) == 1:
                 number = number + 1
@@ -388,8 +384,16 @@ class Sudoku:
             else:
                 return False
 
-    
+    def backtrack_record(self, start):
+        end = False
+        value = start
+        while not end:
+            self.record.insert(0, value)
+            value = self.backtrack[value]
+
+            if value == 'END':
+                end = True
 
 
-sudoku = Sudoku("3..1.1....4.4..2")
+sudoku = Sudoku(".1..2..1...3..4.")
 sudoku.actions()
