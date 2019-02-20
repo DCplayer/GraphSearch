@@ -1,5 +1,5 @@
+from copy import copy
 from copy import deepcopy
-
 
 class Sudoku:
     def __init__(self, sudoku_string):
@@ -52,7 +52,7 @@ class Sudoku:
         self.queue_list = []
         self.state_cost = []
         self.backtrack = {
-            self.initial_string: ''
+            self.initial_string: 'END'
         }
         self.frontiers = []
 
@@ -72,13 +72,20 @@ class Sudoku:
             return
 
         while not self.finish and self.change:
+            print("--------------------------------------------------------------------")
             print(self.queue_list)
             compare1 = deepcopy(self.queue_list)
             self.iterate_reaction()
 
+            print("\n\nBefore Compare: ")
+            print(self.queue_list)
+            print(compare1)
+            print(self.actual_string)
+            print("\n\n")
             if compare1 == self.queue_list:
                 self.change == False
                 self.solvable = False
+            print("--------------------------------------------------------------------")
 
         if not self.solvable:
             print("Not solvable sudoku. There are more than one answer to it \n")
@@ -130,11 +137,11 @@ class Sudoku:
                 elif len(self.probability[x]) == 1:
                     state_worth = number - 1
 
-                    copy = self.sudoku_string
-                    copy[x] = str(self.probability[x][0])
+                    twin = copy(self.sudoku_string)
+                    twin[x] = str(self.probability[x][0])
 
-                    string_result = '.'.join(copy)
-                    state_worth += 16 - copy.count('.') + self.expert_solve(string_result) - (number - 1)
+                    string_result = ''.join(twin)
+                    state_worth = state_worth +  16 - twin.count('.') + self.expert_solve(string_result) - (number - 1)
 
                     self.backtrack[string_result] = self.actual_string
                     self.append_queuer(string_result, state_worth)
@@ -142,7 +149,12 @@ class Sudoku:
 
         else:
             for x in self.queue_list:
+                if list(x).count('.') == 0:
+                    self.finish = True
+
+
                 self.actual_string = x
+                self.queue_list.remove(x)
                 self.frontiers.append(self.actual_string)
                 self.update_data(self.actual_string)
 
@@ -155,13 +167,14 @@ class Sudoku:
                         print("Something went terrible wrong with iterate_reaction: Size of the probability array is 0")
 
                     elif len(self.probability[x]) == 1:
+                        state_worth = number - 1
 
+                        twin = copy(self.sudoku_string)
+                        twin[x] = str(self.probability[x][0])
 
-                        copy = self.sudoku_string
-                        copy[x] = self.probability[x][0]
-
-                        string_result = '.'.join(copy)
-                        state_worth = 16 - copy.count('.') + self.expert_solve(string_result) - number
+                        string_result = ''.join(twin)
+                        state_worth = state_worth + 16 - twin.count('.') + self.expert_solve(string_result) - (
+                                    number - 1)
 
 
                         #Simplemente revisar si existe una manera mas rapida de llegar al string creado ahorita, en dado
@@ -172,7 +185,9 @@ class Sudoku:
                             if state_worth < self.state_cost[index_queue]:
                                 self.backtrack[string_result] = self.actual_string
                                 self.append_queuer(string_result, state_worth)
-                                return
+                        else:
+                            self.backtrack[string_result] = self.actual_string
+                            self.append_queuer(string_result, state_worth)
                         return
                 # solver para cada uno y que se coloquen los nuevos strings en el backtrack
 
@@ -208,7 +223,7 @@ class Sudoku:
 
     def expert_solve(self, data):
         dato = list(data)
-        prob = deepcopy(self.probability)
+        prob = copy(self.probability)
 
         number = 0
         for x in dato:
@@ -229,15 +244,17 @@ class Sudoku:
                     if n3 in content:
                         content.remove(n3)
                 prob[number] = content
-            number =+ 1
+            number = number + 1
 
         number = 0
+        print("Probabilidad de " + str(data) + "\n" + str(prob))
         for x in prob:
             if len(prob[x]) == 1:
-                number+=1
+                number = number + 1
         return number
 
     def update_data(self, string_state):
+        self.sudoku_string = list(string_state)
         # Columns & Rows
         for i in range(4):
             row = [string_state[4 * i + 0], string_state[4 * i + 1], string_state[4 * i + 2],
@@ -272,6 +289,7 @@ class Sudoku:
 
         for i in range(16):
             self.probability[i] = [1, 2, 3, 4]
+
 
     '''''Returns in which square form self.square[] should you look for the numbers'''
     def which_square(self, index):
@@ -326,7 +344,7 @@ class Sudoku:
         number = 0
         for x in self.probability:
             if len(self.probability[x]) == 1:
-                number+=1
+                number = number + 1
 
         return number
 
@@ -336,18 +354,41 @@ class Sudoku:
             self.state_cost.append(state_worth)
 
         else:
-            length = len(self.state_cost)
-            index = 0
-            for x in self.state_cost:
-                if state_worth > x:
-                    self.state_cost.insert(index, state_worth)
-                    self.queue_list.insert(index, string_queuer)
+            if self.frontier_bool(string_queuer, state_worth):
+                if string_queuer in self.frontiers:
+                    index = self.frontiers.index(string_queuer)
+                    self.state_cost[index] = state_worth
+                    self.backtrack[string_queuer] = self.actual_string
+                else:
+                    length = len(self.state_cost)
+                    index = 0
+                    for x in self.state_cost:
+                        if state_worth > x:
+                            self.state_cost.insert(index, state_worth)
+                            self.queue_list.insert(index, string_queuer)
+                            break
 
-                index+=1
+                        index = index + 1
 
-            if length == len(self.state_cost):
-                self.state_cost.append(state_worth)
-                self.queue_list.append(string_queuer)
+                    if length == len(self.state_cost):
+                        self.state_cost.append(state_worth)
+                        self.queue_list.append(string_queuer)
+
+    '''''Return true if either, the string is not on frontiers, so it has not been analyzed or
+    The state worth of the string_queuer is higher than the one listed on frontiers, which makes a better result'''
+    def frontier_bool(self, string_queuer, state_worth):
+        if string_queuer not in self.frontiers:
+            return True
+        else:
+            index = self.frontiers.index(string_queuer)
+            weight = self.state_cost[index]
+
+            if weight < state_worth:
+                return True
+            else:
+                return False
+
+    
 
 
 sudoku = Sudoku("3..1.1....4.4..2")
