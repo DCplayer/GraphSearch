@@ -11,22 +11,23 @@ class Fifteen:
         self.inversiones = 0
         self.row_number = 0
         self.sectors = {
-            0: hex(0),
-            1: hex(1),
-            2: hex(2),
-            3: hex(3),
-            4: hex(4),
-            5: hex(5),
-            6: hex(6),
-            7: hex(7),
-            8: hex(8),
-            9: hex(9),
-            10: hex(10),
-            11: hex(11),
-            12: hex(12),
-            13: hex(13),
-            14: hex(14),
-            15: hex(15)
+            '0': 0,
+            '1': 1,
+            '2': 2,
+            '3': 3,
+            '4': 4,
+            '5': 5,
+            '6': 6,
+            '7': 7,
+            '8': 8,
+            '9': 9,
+            'A': 10,
+            'B': 11,
+            'C': 12,
+            'D': 13,
+            'E': 14,
+            'F': 15,
+            '.': 16
         }
         self.record = []
         self.queue_list = []
@@ -34,6 +35,7 @@ class Fifteen:
         self.backtrack = {
             self.initial_string: 'END'
         }
+        self.explored = []
         self.frontiers = []
 
     def organize_hex_list(self):
@@ -46,18 +48,17 @@ class Fifteen:
 
     def solvable_puzzle(self):
         inversions = 0
-        self.organize_hex_list()
-        index_space = self.fifteen_string.index(16)
-        self.fifteen_string.remove(16)
+        index_space = self.fifteen_string.index('.')
+        self.fifteen_string.remove('.')
 
         for i in range(14):
-            x = self.fifteen_string[i]
+            x = self.sectors[self.fifteen_string[i]]
             for j in range(1, 15):
-                y = self.fifteen_string[j]
+                y = self.sectors[self.fifteen_string[j]]
                 if x > y and i < j:
                     inversions = inversions + 1
         self.inversiones = inversions
-        self.fifteen_string.insert(index_space, 16)
+        self.fifteen_string.insert(index_space, '.')
 
         self.row_number = 4 - math.floor(index_space / 4)
         result1 = 'ODD'
@@ -75,28 +76,56 @@ class Fifteen:
             return False
 
     def goal_test(self):
-        if self.fifteen_string == [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]:
+        if self.fifteen_string == ['1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F', '.']:
             return True
         else:
             return False
 
-    def actions(self):
+    def actions(self, state):
+        action_list = []
+        index = self.fifteen_string.index('.')
+        if index > 3:
+            action_list.append('U')
+        if index < 12:
+            action_list.append('D')
+        if index % 4 > 0:
+            action_list.append('L')
+        if index % 4 < 3:
+            action_list.append('R')
         return
 
     def result(self, state, action):
+        if action == 'UP':
+            return self.move_up()
         return
 
     def move_up(self, state):
-        return
+        index = self.fifteen_string.index('.')
+        base = list(state)
+        base[index] = base[index - 4]
+        base[index - 4] = '.'
+        return ''.join(base)
 
     def move_down(self, state):
-        return
+        index = self.fifteen_string.index('.')
+        base = list(state)
+        base[index] = base[index + 4]
+        base[index + 4] = '.'
+        return ''.join(base)
 
     def move_left(self, state):
-        return
+        index = self.fifteen_string.index('.')
+        base = list(state)
+        base[index] = base[index - 1]
+        base[index - 1] = '.'
+        return ''.join(base)
 
     def move_right(self, state):
-        return
+        index = self.fifteen_string.index('.')
+        base = list(state)
+        base[index] = base[index + 1]
+        base[index + 1] = '.'
+        return ''.join(base)
 
     def main(self):
         if not self.solvable_puzzle():
@@ -108,4 +137,4 @@ class Fifteen:
 
 
 fifteen = Fifteen('D2A31C845.96FEB7')
-
+print(fifteen.solvable_puzzle())
