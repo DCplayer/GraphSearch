@@ -139,6 +139,32 @@ class Fifteen:
         self.backtrack[string_result] = state
         return string_result
 
+    def distance(self, index_a, index_b):
+        # Section A
+        floor_a = math.floor(index_a / 4)
+        module_a = index_a % 4
+
+        #Section B
+        floor_b = math.floor(index_b / 4)
+        module_b = index_b % 4
+        return abs(floor_a - floor_b) + abs(module_a - module_b)
+
+    def weight(self, state):
+        """"Where
+        out_a_place: gets +1 whenever a square its out of its place
+        reach: gets +x where x is the distance of a square to its rightfull place"""
+        out_a_place = 0
+        reach = 0
+        string_array = list(state)
+        for i in string_array:
+            value = self.sectors[i]
+            index = string_array.index(i)
+
+            if (value -1) != index:
+                out_a_place = out_a_place + 1
+                reach = reach + self.distance(value - 1, index)
+        return out_a_place + reach
+
     def main(self):
         if not self.solvable_puzzle():
             print("El puzzle no posee solucion. \nNúmero de inversiones: "
@@ -161,8 +187,7 @@ class Fifteen:
                 action_list = self.actions(self.actual_string)
                 for i in action_list:
                     next_state = self.result(self.actual_string, i)
-                    self.frontiers.append(next_state)
-                    #funcion de heuristica para saber cuanto pesa el next_state
+                    state_price = self.weight(next_state)
                     #Funcion para posicionar un next_state basado en su peso de heuristica
 
 fifteen = Fifteen('D2A31C845.96FEB7')
