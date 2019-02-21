@@ -101,43 +101,51 @@ class Fifteen:
         return
 
     def move_up(self, state):
+        keys = self.backtrack.keys()
         index = self.fifteen_string.index('.')
         base = list(state)
         base[index] = base[index - 4]
         base[index - 4] = '.'
 
         string_result = ''.join(base)
-        self.backtrack[string_result] = state
+        if string_result not in keys:
+            self.backtrack[string_result] = state
         return string_result
 
     def move_down(self, state):
+        keys = self.backtrack.keys()
         index = self.fifteen_string.index('.')
         base = list(state)
         base[index] = base[index + 4]
         base[index + 4] = '.'
 
         string_result = ''.join(base)
-        self.backtrack[string_result] = state
+        if string_result not in keys:
+            self.backtrack[string_result] = state
         return string_result
 
     def move_left(self, state):
+        keys = self.backtrack.keys()
         index = self.fifteen_string.index('.')
         base = list(state)
         base[index] = base[index - 1]
         base[index - 1] = '.'
 
         string_result = ''.join(base)
-        self.backtrack[string_result] = state
+        if string_result not in keys:
+            self.backtrack[string_result] = state
         return string_result
 
     def move_right(self, state):
+        keys = self.backtrack.keys()
         index = self.fifteen_string.index('.')
         base = list(state)
         base[index] = base[index + 1]
         base[index + 1] = '.'
 
         string_result = ''.join(base)
-        self.backtrack[string_result] = state
+        if string_result not in keys:
+            self.backtrack[string_result] = state
         return string_result
 
     def distance(self, index_a, index_b):
@@ -196,6 +204,19 @@ class Fifteen:
             if value == 'END':
                 end = True
 
+    def print_nicely(self, string):
+        elements = list(string)
+        print("+---+---+---+---+")
+        print("| " + elements[0] + " | " + elements[1] + " | " + elements[2] + " | " + elements[3] + " |")
+        print("+---+---+---+---+")
+        print("| " + elements[4] + " | " + elements[5] + " | " + elements[6] + " | " + elements[7] + " |")
+        print("+---+---+---+---+")
+        print("| " + elements[8] + " | " + elements[9] + " | " + elements[10] + " | " + elements[11] + " |")
+        print("+---+---+---+---+")
+        print("| " + elements[12] + " | " + elements[13] + " | " + elements[14] + " | " + elements[15] + " |")
+        print("+---+---+---+---+")
+
+
     def solve_puzzle(self):
         if not self.solvable_puzzle():
             print("El puzzle no posee solucion. \nNúmero de inversiones: "
@@ -207,9 +228,6 @@ class Fifteen:
         self.frontiers.append(''.join(self.fifteen_string))
         self.state_cost.append(1000000000000000)
         while not self.finish and self.change:
-            print("--------------------------------------------------------------------")
-            print("Actual String")
-            print(self.actual_string)
             self.actual_string = self.frontiers[0]
             self.fifteen_string = list(self.actual_string)
             if self.goal_test():
@@ -228,10 +246,15 @@ class Fifteen:
                         self.queue_positioner(next_state, state_price)
 
         print("--------------------------------------------------------------------")
-        print("Fastest stepts to solution: \n")
-        print(self.record)
+        print("Fastest Steps to solution: \n")
+        number = 1
+        for i in self.record:
+            print("Step: " + str(number))
+            self.print_nicely(i)
+            print("")
+            number = number + 1
         print("--------------------------------------------------------------------")
 
 
-fifteen = Fifteen('D2A31C845.96FEB7')
+fifteen = Fifteen('6D7A89B.F2C5E314')
 fifteen.solve_puzzle()

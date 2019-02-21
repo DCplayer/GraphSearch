@@ -17,8 +17,8 @@
       <file leaf-file-name="fifteen.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/fifteen.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="313">
-              <caret line="211" column="37" lean-forward="true" selection-start-line="211" selection-start-column="37" selection-end-line="211" selection-end-column="37" />
+            <state relative-caret-position="327">
+              <caret line="256" lean-forward="true" selection-start-line="256" selection-end-line="256" />
               <folding>
                 <element signature="e#0#11#0" expanded="true" />
               </folding>
@@ -64,10 +64,11 @@
       <find>append</find>
       <find>append_q</find>
       <find>floor</find>
-      <find>backtrack</find>
       <find>y</find>
       <find>y</find>
       <find>backtrac</find>
+      <find>backtrack[</find>
+      <find>backtrack</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -213,13 +214,8 @@
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/fifteen.py</url>
-          <line>198</line>
-          <option name="timeStamp" value="18" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/fifteen.py</url>
-          <line>76</line>
-          <option name="timeStamp" value="20" />
+          <line>196</line>
+          <option name="timeStamp" value="21" />
         </line-breakpoint>
       </breakpoints>
       <default-breakpoints>
@@ -229,7 +225,7 @@
           </properties>
         </breakpoint>
       </default-breakpoints>
-      <option name="time" value="21" />
+      <option name="time" value="22" />
     </breakpoint-manager>
     <watches-manager>
       <configuration name="PythonConfigurationType">
@@ -330,8 +326,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/fifteen.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="313">
-          <caret line="211" column="37" lean-forward="true" selection-start-line="211" selection-start-column="37" selection-end-line="211" selection-end-column="37" />
+        <state relative-caret-position="327">
+          <caret line="256" lean-forward="true" selection-start-line="256" selection-end-line="256" />
           <folding>
             <element signature="e#0#11#0" expanded="true" />
           </folding>
