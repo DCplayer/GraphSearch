@@ -84,7 +84,12 @@ class Sudoku:
             print("--------------------------------------------------------------------")
             return
         print("Fastest stepts to solution: \n")
-        print(self.record)
+        number = 1
+        for i in self.record:
+            print("Step: " + str(number))
+            self.print_nicely(i)
+            print("")
+            number = number + 1
         print("--------------------------------------------------------------------")
 
     def contradiction(self):
@@ -391,6 +396,18 @@ class Sudoku:
 
             if value == 'END':
                 end = True
+
+    def print_nicely(self, string):
+        elements = list(string)
+        print("+---+---+---+---+")
+        print("| " + elements[0] + " | " + elements[1] + " | " + elements[2] + " | " + elements[3] + " |")
+        print("+---+---+---+---+")
+        print("| " + elements[4] + " | " + elements[5] + " | " + elements[6] + " | " + elements[7] + " |")
+        print("+---+---+---+---+")
+        print("| " + elements[8] + " | " + elements[9] + " | " + elements[10] + " | " + elements[11] + " |")
+        print("+---+---+---+---+")
+        print("| " + elements[12] + " | " + elements[13] + " | " + elements[14] + " | " + elements[15] + " |")
+        print("+---+---+---+---+")
 
 
 sudoku = Sudoku("2.....3..4.....1")

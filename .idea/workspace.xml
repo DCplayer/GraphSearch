@@ -14,11 +14,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="fifteen.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="fifteen.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/fifteen.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="327">
-              <caret line="256" lean-forward="true" selection-start-line="256" selection-end-line="256" />
+            <state relative-caret-position="296">
+              <caret line="255" column="33" lean-forward="true" selection-start-line="255" selection-start-column="33" selection-end-line="255" selection-end-column="33" />
               <folding>
                 <element signature="e#0#11#0" expanded="true" />
               </folding>
@@ -31,6 +31,18 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="51">
               <caret line="310" selection-start-line="310" selection-end-line="310" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="sudoku.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/sudoku.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="191">
+              <caret line="401" column="34" lean-forward="true" selection-start-line="401" selection-start-column="34" selection-end-line="401" selection-end-column="34" />
+              <folding>
+                <element signature="e#0#21#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -69,6 +81,8 @@
       <find>backtrac</find>
       <find>backtrack[</find>
       <find>backtrack</find>
+      <find>fastest</find>
+      <find>print_</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -77,8 +91,8 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/sudoku.py" />
         <option value="$PROJECT_DIR$/fifteen.py" />
+        <option value="$PROJECT_DIR$/sudoku.py" />
       </list>
     </option>
   </component>
@@ -122,7 +136,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.fifteen">
+  <component name="RunManager" selected="Python.sudoku">
     <configuration name="fifteen" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="GraphSearch" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -165,8 +179,8 @@
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.fifteen" />
         <item itemvalue="Python.sudoku" />
+        <item itemvalue="Python.fifteen" />
       </list>
     </recent_temporary>
   </component>
@@ -187,7 +201,7 @@
     <frame x="-7" y="0" width="974" height="1047" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" weight="0.17745303" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.17745303" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" />
       <window_info anchor="bottom" id="Version Control" order="7" />
@@ -314,22 +328,22 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/sudoku.py">
+    <entry file="file://$PROJECT_DIR$/fifteen.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="641">
-          <caret line="85" selection-start-line="85" selection-end-line="87" selection-end-column="85" />
+        <state relative-caret-position="296">
+          <caret line="255" column="33" lean-forward="true" selection-start-line="255" selection-start-column="33" selection-end-line="255" selection-end-column="33" />
           <folding>
-            <element signature="e#0#21#0" expanded="true" />
+            <element signature="e#0#11#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/fifteen.py">
+    <entry file="file://$PROJECT_DIR$/sudoku.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="327">
-          <caret line="256" lean-forward="true" selection-start-line="256" selection-end-line="256" />
+        <state relative-caret-position="191">
+          <caret line="401" column="34" lean-forward="true" selection-start-line="401" selection-start-column="34" selection-end-line="401" selection-end-column="34" />
           <folding>
-            <element signature="e#0#11#0" expanded="true" />
+            <element signature="e#0#21#0" expanded="true" />
           </folding>
         </state>
       </provider>
