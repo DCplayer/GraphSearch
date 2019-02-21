@@ -8,17 +8,18 @@ class Fifteen:
         self.change = True
         self.solvable = True
         self.finish = False
+        self.inversiones = 0
         self.sectors = {
-            0: 0,
-            1: 1,
-            2: 2,
-            3: 3,
-            4: 4,
-            5: 5,
-            6: 6,
-            7: 7,
-            8: 8,
-            9: 9,
+            0: hex(0),
+            1: hex(1),
+            2: hex(2),
+            3: hex(3),
+            4: hex(4),
+            5: hex(5),
+            6: hex(6),
+            7: hex(7),
+            8: hex(8),
+            9: hex(9),
             10: hex(10),
             11: hex(11),
             12: hex(12),
@@ -33,3 +34,30 @@ class Fifteen:
             self.initial_string: 'END'
         }
         self.frontiers = []
+
+    def organize_hex_list(self):
+        for i in range(16):
+            if self.fifteen_string[i] == '.':
+                self.fifteen_string[i] = 16
+            else:
+                self.fifteen_string[i] = int(self.fifteen_string[i], 16)
+        print(self.fifteen_string)
+
+    def solvable_puzzle(self):
+        inversions = 0
+        self.organize_hex_list()
+        index_space = self.fifteen_string.index(16)
+        self.fifteen_string.remove(16)
+
+        for i in range(14):
+            x = self.fifteen_string[i]
+            for j in range(1, 15):
+                y = self.fifteen_string[j]
+                if x > y and i < j:
+                    inversions = inversions + 1
+        self.inversiones = inversions
+        self.fifteen_string.insert(index_space, 16)
+
+
+fifteen = Fifteen('D2A31C845.96FEB7')
+fifteen.solvable_puzzle()

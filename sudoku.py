@@ -393,5 +393,5 @@ class Sudoku:
                 end = True
 
 
-sudoku = Sudoku(".1..2..1...3..4.")
+sudoku = Sudoku("2.....3..4.....1")
 sudoku.actions()
