@@ -165,7 +165,37 @@ class Fifteen:
                 reach = reach + self.distance(value - 1, index)
         return out_a_place + reach
 
-    def main(self):
+    def queue_positioner(self, next_state, state_price):
+        if len(self.state_cost) < 1 and len(self.frontiers) < 1:
+            self.frontiers.append(next_state)
+            self.state_cost.append(state_price)
+
+        else:
+            length = len(self.state_cost)
+            index = 0
+            for x in self.state_cost:
+                if state_price < x:
+                    self.state_cost.insert(index, state_price)
+                    self.frontiers.insert(index, next_state)
+                    break
+
+                index = index + 1
+
+            if length == len(self.state_cost):
+                self.state_cost.append(state_price)
+                self.frontiers.append(next_state)
+
+    def backtrack_record(self, start):
+        end = False
+        value = start
+        while not end:
+            self.record.insert(0, value)
+            value = self.backtrack[value]
+
+            if value == 'END':
+                end = True
+
+    def solve_puzzle(self):
         if not self.solvable_puzzle():
             print("El puzzle no posee solucion. \nNúmero de inversiones: "
                   + str(self.inversiones) + "\nPosicion de X desde el fondo: " + str(self.row_number)  +
@@ -178,7 +208,7 @@ class Fifteen:
         while not self.finish and self.change:
             self.actual_string = self.frontiers[0]
             if self.goal_test(self.actual_string):
-                #Funcion de backtrack con self.actual_string
+                self.backtrack_record(self.actual_string)
                 break
             else:
                 self.frontiers.remove(0)
@@ -188,7 +218,13 @@ class Fifteen:
                 for i in action_list:
                     next_state = self.result(self.actual_string, i)
                     state_price = self.weight(next_state)
-                    #Funcion para posicionar un next_state basado en su peso de heuristica
+                    self.queue_positioner(next_state, state_price)
+
+        print("--------------------------------------------------------------------")
+        print("Fastest stepts to solution: \n")
+        print(self.record)
+        print("--------------------------------------------------------------------")
+
 
 fifteen = Fifteen('D2A31C845.96FEB7')
-print(fifteen.solvable_puzzle())
+fifteen.solve_puzzle()
