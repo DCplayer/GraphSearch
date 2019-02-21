@@ -1,4 +1,5 @@
 import math
+import copy
 class Fifteen:
     def __init__(self, fifteen_string):
 
@@ -206,19 +207,25 @@ class Fifteen:
         self.frontiers.append(''.join(self.fifteen_string))
         self.state_cost.append(1000000000000000)
         while not self.finish and self.change:
+            print("--------------------------------------------------------------------")
+            print("Actual String")
+            print(self.actual_string)
             self.actual_string = self.frontiers[0]
-            if self.goal_test(self.actual_string):
+            self.fifteen_string = list(self.actual_string)
+            if self.goal_test():
                 self.backtrack_record(self.actual_string)
                 break
             else:
-                self.frontiers.remove(0)
-                self.state_cost.remove(0)
+                del self.frontiers[0]
+                del self.state_cost[0]
                 self.explored.append(self.actual_string)
                 action_list = self.actions(self.actual_string)
                 for i in action_list:
-                    next_state = self.result(self.actual_string, i)
-                    state_price = self.weight(next_state)
-                    self.queue_positioner(next_state, state_price)
+                    copy_string = self.actual_string[:]
+                    next_state = self.result(copy_string, i)
+                    if next_state not in self.explored:
+                        state_price = self.weight(next_state)
+                        self.queue_positioner(next_state, state_price)
 
         print("--------------------------------------------------------------------")
         print("Fastest stepts to solution: \n")
